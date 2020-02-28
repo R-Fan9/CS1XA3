@@ -147,13 +147,16 @@ if [ "$disct" -lt 0 ] ; then
 	echo "This can not be computed since the discriminant is negative."
 else
 cat >script.py <<'END_SCRIPT'
+
 import sys, math
 a=float(sys.argv[1])
 b=float(sys.argv[2])
 c=float(sys.argv[3])
 d=float(sys.argv[4])
+
 v1=(-1*b+math.sqrt(d))/(2*a)
 v2=(-1*b-math.sqrt(d))/(2*a)
+
 if v1 == v2:
 	print("The root of the quadratic equation is:")
 	print(v1)
@@ -161,6 +164,7 @@ else:
 	print("The roots of the quadratic equation are:")
 	print(v1)
 	print(v2)
+
 END_SCRIPT
 
 python script.py "$a" "$b" "$c" "$disct"
