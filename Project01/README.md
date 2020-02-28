@@ -1,37 +1,35 @@
 # CS 1XA3 Project01 - fanh11
 
 ## Usage
-Execute this script from project root with: 
-``` 
-chmod +x ./CS1XA3/Project01/project_analyze.sh 
-./CS1XA3/Project01/project_analyze arg1 
-``` 
+Execute this script from project root with:
+```
+chmod +x ./CS1XA3/Project01/project_analyze.sh
+./CS1XA3/Project01/project_analyze arg1
+```
 With possible arguments arg1: 
-* 1 - FIXME Log 
-* 2 - Checkout Latest Merge 
-* 3 - File Size List 
-* 4 - File Type Count 
+* 1 - FIXME Log
+* 2 - Checkout Latest Merge
+* 3 - File Size List
+* 4 - File Type Count
 * 5 - Find Tag
 * 6 - Switch to Executable
-* 7 - Backup and Delete/Restore
+* 7 - Backup and Delete/Resore
 * 8 - Calculate Roots
-* 9 - Remove or Display
+* 9 - Remove 
 
 ## Feature 01; FIXME Log (6.2)
-Description: FIXME Log finds every file in the repo that has the word #FIXME in the last line. Then it stores 
-the list of file names in a new file - fixme.log - separated by a newline
- 
+Description: FIXME Log finds every file in the repo that has the word #FIXME in the last line. Then it stores the list of file names in a new file - fixme.log - separated by a newline
+
 Execution: 
-1. FIXME Log is executed by inputting 1 as arg1
- 
+1. FIXME Log is executed by inputting 1 as arg1 
+
 Reference: [tail -n 1](https://unix.stackexchange.com/questions/286544/how-to-extract-first-and-last-lines-in-a-file)
 
 ## Feature 02; Checkout Latest Merge (6.3)
-Description: Checkout Latest Merge finds the most recent commit with the word merge (case insensitive) in the 
-commit message and checkout that commit 
+Description: Checkout Latest Merge finds the most recent commit with the word merge (case insensitive) in the commit message and checkout that commit
 
 Execution: 
-1. Checkout Latest Merge is executed by inputting 2 as arg1 
+1. Checkout Latest Merge is executed by inputting 2 as arg1
 
 Reference: [awk '{print $1;}'](https://unix.stackexchange.com/questions/65932/how-to-get-the-first-word-of-a-string)
 
@@ -44,10 +42,10 @@ Execution:
 Reference: [stat -c%s](https://www.cyberciti.biz/faq/howto-bash-check-file-size-in-linux-unix-scripting/)
 
 ## Feature 04; File Type Count (6.5)
-Description: File Type Count outputs the number of files in the repo that have the user specified extension 
+Description: File Type Count outputs the number of files in the repo that have the user specified extension
 
 Execution: 
-1. File Type Count is executed by inputting 4 as arg1 
+1. File Type Count is executed by inputting 4 as arg1
 2. Enter a file extension and press enter 
 
 Reference: [find .. -type f -name](https://mac1xa3.ca/Slides/Week05/1XA3_Lab_Week05.html)
@@ -57,7 +55,7 @@ Description: Find Tag creates a log file with the user specified Tag name, which
 begin with a comment (i.e #) and include Tag for each python file in the repo
 
 Execution: 
-1. Find Tag is executed by inputting 5 as arg1 e
+1. Find Tag is executed by inputting 5 as arg1
 2. Enter a Tag and press enter
 
 Reference: [find .. -type f -name](https://mac1xa3.ca/Slides/Week05/1XA3_Lab_Week05.html)
