@@ -11,6 +11,10 @@ With possible arguments arg1:
 * 3 - File Size List 
 * 4 - File Type Count 
 * 5 - Find Tag
+* 6 - Switch to Executable
+* 7 - Backup and Delete/Restore
+* 8 - Calculate Roots
+* 9 - Remove or Display
 
 ## Feature 01; FIXME Log (6.2)
 Description: FIXME Log finds every file in the repo that has the word #FIXME in the last line. Then it stores 
