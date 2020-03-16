@@ -146,16 +146,20 @@ options[sIndex-1].className.addClass("active");                                 
 ```
 $('.navbar').removeClass('hide');
 '''
+```
 
 - The following snippet of javascript code is altered from [w3schools](https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_setinterval)
+
 ```
 setInterval(slideShow,2000);
 ```
 
 - The following snippet of javascript code is altered from [w3schools](https://www.w3schools.com/jquery/sel_firstchild.asp) 
+
 ```
 $('.slideShow img:first-child').addClass('active'); 
 ```
+
 
 - The following snippet of javascript code is altered from [w3schools](https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_eff_slidetoggle)
 ```
