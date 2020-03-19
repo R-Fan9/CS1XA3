@@ -143,6 +143,7 @@ options[i].className = options[i].className.replace(" active", "");
 ```
 options[sIndex-1].className.addClass("active");                                                                                                                     options[sIndex-1].className += " active";
 ```
+
 ```
 $('.navbar').removeClass('hide');
 '''
@@ -159,7 +160,6 @@ setInterval(slideShow,2000);
 ```
 $('.slideShow img:first-child').addClass('active'); 
 ```
-
 
 - The following snippet of javascript code is altered from [w3schools](https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_eff_slidetoggle)
 ```
