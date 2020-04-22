@@ -19,7 +19,9 @@
    python manage.py runserver localhost:10025
    ```
    - Log in with
+   
      Username		Password
+     
     - "HaoZheng"	"#Hao123456"
     - "Noa"		"#Hao123456"
     - "David"		"#Hao123456"
@@ -48,17 +50,24 @@
 		- username already exist
 		
 ## Objective 02; User Profile & Interest Display
+
  Description:
+ 
 	- this feature is displayed in 'social_base.djhtml' which renders the
 	  left_column used by 'message.djhtml', 'people.djhtml' and 'account.djhtml'
 	- displays the profile (e.g. Employment, Location and Birthday) and the 
 	  interests of the currently logged in user by using Django Template 
 	  Variable
+	  
  Exception:
+ 
 	- If the user is not authenticated, it redirects to the 
 	  'login' page
+	  
 ## Objective 03; Account Settings Page
+
  Description:
+ 
 	- this feature is displayed in 'account.djhtml' which is rendered by
 	  'account_view'
 	- provides forms for users to change their passwords, edit their profiles
@@ -75,11 +84,16 @@
 	  a POST request is then sent to the function 'deleteInterest' in 'account.js' to 
 	  '/e/fanh11/interestdelete' which is handled by 'interest_delete_view'.
 	  The call back function 'delIntReponse' then reloads the page 
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to the 'login'
 	  page
+	  
 ## Objective 04; Displaying People List
+
  Description:
+ 
 	- this feature is displayed in 'people.djhtml' which is rendered by 
 	  'people_view'
 	- displays actual Users in the middle column who are not friend of 
@@ -92,13 +106,18 @@
 	  key by one which allows the 'people_view' page to display one more User
 	- the "request.session["count"]" is initialized in 'people_view' and it 
 	  is reseted to 1 after the user logged out
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to the 'login_view'
 	  page
 	- if the status after clicking the 'More' button is not equal to 'success',
 	  an alert message will be displayed
+	  
 ## Objective 05; Sending Friend Requests
+
  Description:
+ 
 	- this feature is displayed in 'people.djhtml' which is rendered by
 	  'people_view'
 	- when a 'Friend Request' button is clicked, its id which contains the
@@ -110,7 +129,9 @@
 	  'from_user' being assigned to the current logged in user
 	- displays a list of friend requests sent to the current user on 
 	  right column of 'people.djhtml'
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to the 'login_view'
 	  page
 	- if the '/e/fanh11/friendrequest' is called without arguments, a 404
@@ -119,8 +140,11 @@
 	  to 'success', an alert message will be displayed
 	- if the same 'Friend Request' button is clicked more than once, new 
 	  entries to FriendRequest model will not be created
+	  
 ## Objective 06; Accepting/Declining Friend Requests
+
  Description:
+ 
 	- this feature is displayed in 'people.djhtml' which is rendered by
 	  'people_view'
 	- when the accept button (green) is clicked, its id containing the 
@@ -136,24 +160,34 @@
 	  '/e/fanh11/acceptdecline'. The 'accept_decline_view' function 
 	  handlesthe POST by deleting the corresponding FriendRequest entry. The call back function
 	  'adReponse' then reloads the page 
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to the 'login_view'
 	  page
 	- if the status after clicking the accept/decline button is not equal
 	  to 'success', an alert message will be displayed
 	- if '/e/fanh11/acceptdecline' is called without arguments, a 404 error
 	  message will be displayed
+	  
 ## Objective 07; Displaying Friends
+
  Description:
+ 
 	- this feature is displayed by 'messages.djhtml' which is rendered by
 	  'message_view'
 	- displays a list of current user's friends on the right column of 
 	  'messages.djhtml'
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to the 'login_view'
 	  page
+	  
 ## Objective 08; Submitting Posts
+
  Description:
+ 
 	- this feature is displayed by 'messages.djhtml' which is rendered by
 	  'message_view'
 	- provides a text field (id - 'post-text') and button (id - 'post button')
@@ -164,14 +198,19 @@
 	  then reloads the page
 	- the 'post_submit_view' function handles the POST by adding a new entry to
 	  the Post model
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to 'login_view' page
 	- if '/e/fanh11/postsubmit' is called without arguments, a 404 error
 	  message will be displayed
 	- if the status after clicking the 'Post' button is not equal 'success',
 	  an alert message will be displayed
+	  
 ## Objective 09; Displaying Post List
+
  Description:
+ 
 	- this feature is displayed by 'messages.djhtml' which is rendered by 
 	  'message_view'
 	- displays a list of posts in the middle column of 'messages.djhtml'
@@ -185,12 +224,17 @@
 	  page to display 1 more post
 	- the 'reqeust.seesion['pcount']' is initialized in 'message_view' and
 	  it is reseted to 2 after the user logged out
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to 'login_view' page
 	- if the status after clicking the 'More' button is not equal to 
 	  'success', an alert message will be displayed
+	  
 ## Objective 10; Liking Posts (and Displaying Like Count)
+
  Description:
+ 
 	- this feature is displayed by 'messages.djhtml' which is rendered by
 	  'message_view'
 	- when the 'like' button of a post is clicked, its id containing the 
@@ -203,7 +247,9 @@
 	  it once
 	- diplays the number of likes of a post based on the number of users 
 	  who clicked its 'like' button
+	  
  Exception:
+ 
 	- if the user is not authenticated, it redirects to the 'login_view' page
 	- if '/e/fanh11/like' is called without arguments, a 404 error message will
 	  be displayed
