@@ -31,13 +31,15 @@
 ## Objective 01; Sign Up
 
  Description:
- 
+ 	...
 	- this feature is displayed in 'signup.djhtml' which is rendered by 
 	  'signup_view'
-	  
+	...
 	- provides a form for users to enter their username and password  
+	
 	- creates a new UserInfo entry from the POST request sent by the 
 	  UserCreationform
+	  
 	- automatically logs the new user in and redirects to the message page
 	
  Exception:
