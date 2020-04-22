@@ -26,8 +26,8 @@
     - "Noa"		"#Hao123456"
     - "David"	"#Hao123456"
     - "Yi"		"#Hao123456"
-    - "WuKong"		"#Hao123456"
-    - "Eugene"		"#Hao123456"
+    - "WuKong"	"#Hao123456"
+    - "Eugene"	"#Hao123456"
    
 ## Objective 01; Sign Up
 
