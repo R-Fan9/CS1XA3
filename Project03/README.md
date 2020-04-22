@@ -34,34 +34,26 @@
  
 - this feature is displayed in 'signup.djhtml' which is rendered by 'signup_view'
 - provides a form for users to enter their username and password  
-	
 - creates a new UserInfo entry from the POST request sent by the UserCreationform
-
 - automatically logs the new user in and redirects to the message page
 	
  Exception:
  
-	- If the following situation occur, new UserInfo object will not be 
-	  created and the 'sign up' page will be reloaded:
-		- username and/or password and/or confirm password are not entered
-		- username and/or password do not meet the criteria
-		- password and confirm password do not match
-		- username already exist
+- If the following situation occur, new UserInfo object will not be created and the 'sign up' page will be reloaded:
+	- username and/or password and/or confirm password are not entered
+	- username and/or password do not meet the criteria
+	- password and confirm password do not match
+	- username already exist
 		
 ## Objective 02; User Profile & Interest Display
 
  Description:
  
-	- this feature is displayed in 'social_base.djhtml' which renders the
-	  left_column used by 'message.djhtml', 'people.djhtml' and 'account.djhtml'
-	- displays the profile (e.g. Employment, Location and Birthday) and the 
-	  interests of the currently logged in user by using Django Template 
-	  Variable
+- this feature is displayed in 'social_base.djhtml' which renders the left_column used by 'message.djhtml', 'people.djhtml' and 'account.djhtml'
+- displays the profile (e.g. Employment, Location and Birthday) and the interests of the currently logged in user by using Django Template Variable
 	  
  Exception:
- 
-	- If the user is not authenticated, it redirects to the 
-	  'login' page
+- If the user is not authenticated, it redirects to the 'login' page
 	  
 ## Objective 03; Account Settings Page
 
