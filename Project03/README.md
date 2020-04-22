@@ -20,7 +20,7 @@
    ```
    - Log in with
    
-     Username		Password
+    - Username		Password
      
     - "HaoZheng"	"#Hao123456"
     - "Noa"		"#Hao123456"
