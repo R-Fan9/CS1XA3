@@ -21,7 +21,6 @@
    - Log in with
    
     - Username	Password
-     
     - "HaoZheng"	"#Hao123456"
     - "Noa"		"#Hao123456"
     - "David"	"#Hao123456"
