@@ -1,4 +1,4 @@
-from django.http import HttpResponse,HttpResponseNotFound
+from django.http import HttpResponse,HttpResponseNotFound, JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -17,17 +17,14 @@ def messages_view(request):
       out: (HttpResponse) - if user is authenticated, will render private.djhtml
     """
     if request.user.is_authenticated:
-        user_info = models.UserInfo.objects.get(user=request.user)
-
-
-        # TODO Objective 9: query for posts (HINT only return posts needed to be displayed)
-        posts = []
-
-        # TODO Objective 10: check if user has like post, attach as a new attribute to each post
-
-        context = { 'user_info' : user_info
-                  , 'posts' : posts }
-        return render(request,'messages.djhtml',context)
+    	user_info = models.UserInfo.objects.get(user=request.user)
+    	pcount = request.session.get("pcount",2)
+    	request.session["pcount"] = pcount
+    	# TODO Objective 9: query for posts (HINT only return posts needed to be displayed)
+    	posts = [post for post in models.Post.objects.all().order_by('-timestamp')][:request.session["pcount"]]
+    	# TODO Objective 10: check if user has like post, attach as a new attribute to each post
+    	context = { 'user_info' : user_info, 'posts' : posts }
+    	return render(request,'messages.djhtml',context)
 
     request.session['failed'] = True
     return redirect('login:login_view')
@@ -47,14 +44,43 @@ def account_view(request):
                         (if handled in this view)
     """
     if request.user.is_authenticated:
-        form = None
+    	user_info = models.UserInfo.objects.get(user=request.user)
 
-        # TODO Objective 3: Create Forms and Handle POST to Update UserInfo / Password
+    	if request.method == 'POST':
 
-        user_info = models.UserInfo.objects.get(user=request.user)
-        context = { 'user_info' : user_info,
-                    'form' : form }
-        return render(request,'account.djhtml',context)
+    		pswdc_form = PasswordChangeForm(user_info.user, request.POST)
+    		if pswdc_form.is_valid():
+    			user = pswdc_form.save()
+    			update_session_auth_hash(request, user)
+    			return redirect('login:login_view')
+
+    		update_form = models.UserInfoForm(request.POST,instance=user_info)
+    		if update_form.is_valid():
+    			user_info.employment = update_form.cleaned_data.get('employment')
+    			user_info.location = update_form.cleaned_data.get('location')
+    			user_info.birthday = update_form.cleaned_data.get('birthday')
+    			user_info.save()
+    			return redirect('social:account_view')
+
+    		interest = request.POST.get('interest')
+    		if interest:
+    			Int_db = models.Interest(label=interest)
+    			Int_db.save()
+    			aInt = models.Interest.objects.get(label=interest)
+    			user_info.interests.add(aInt)
+    			return redirect('social:account_view')
+    		else:
+    			messages.error(request, "Please enter an interest.")
+    			return redirect('social:account_view')
+
+    	else:
+    		update_form = models.UserInfoForm(instance=user_info)
+    		pswdc_form = PasswordChangeForm(request.user)
+
+    	# TODO Objective 3: Create Forms and Handle POST to Update UserInfo / Password
+
+    	context = { 'user_info' : user_info, 'pswdc_form' : pswdc_form, 'update_form' : update_form}
+    	return render(request,'account.djhtml',context)
 
     request.session['failed'] = True
     return redirect('login:login_view')
@@ -70,18 +96,19 @@ def people_view(request):
       out: (HttpResponse) - if user is authenticated, will render people.djhtml
     """
     if request.user.is_authenticated:
-        user_info = models.UserInfo.objects.get(user=request.user)
+    	user_info = models.UserInfo.objects.get(user=request.user)
         # TODO Objective 4: create a list of all users who aren't friends to the current user (and limit size)
-        all_people = []
+    	count = request.session.get('count',1)
+    	request.session['count'] = count 
+    	all_people = [auser for auser in models.UserInfo.objects.exclude(user=user_info) if user_info not in auser.friends.all()][:request.session['count']]
 
         # TODO Objective 5: create a list of all friend requests to current user
-        friend_requests = []
-
-        context = { 'user_info' : user_info,
+    	friend_requests = [friend for friend in models.FriendRequest.objects.filter(to_user=user_info)]
+    	context = { 'user_info' : user_info,
                     'all_people' : all_people,
                     'friend_requests' : friend_requests }
 
-        return render(request,'people.djhtml',context)
+    	return render(request,'people.djhtml',context)
 
     request.session['failed'] = True
     return redirect('login:login_view')
@@ -104,17 +131,26 @@ def like_view(request):
     '''
     postIDReq = request.POST.get('postID')
     if postIDReq is not None:
-        # remove 'post-' from postID and convert to int
-        # TODO Objective 10: parse post id from postIDReq
-        postID = 0
-
-        if request.user.is_authenticated:
-            # TODO Objective 10: update Post model entry to add user to likes field
-
-            # return status='success'
-            return HttpResponse()
-        else:
-            return redirect('login:login_view')
+    	# remove 'post-' from postID and convert to int
+    	# TODO Objective 10: parse post id from postIDReq
+    	postID = int(postIDReq[5:])
+    	if request.user.is_authenticated:
+    		user_info=models.UserInfo.objects.get(user=request.user)
+    		liked = False
+    		post = models.Post.objects.get(pk=postID)
+    		for x in post.likes.all():
+    			if x.user.username == user_info.user.username:
+    				liked = True
+    				break
+    		if not liked:
+    			post.likes.add(user_info)
+    			data = {'postID':postIDReq}
+    			return JsonResponse(data)
+    		# TODO Objective 10: update Post model entry to add user to likes field
+    		# return status='success'
+    		return HttpResponse()
+    	else:
+    		return redirect('login:login_view')
 
     return HttpResponseNotFound('like_view called without postID in POST')
 
@@ -132,14 +168,15 @@ def post_submit_view(request):
     '''
     postContent = request.POST.get('postContent')
     if postContent is not None:
-        if request.user.is_authenticated:
-
-            # TODO Objective 8: Add a new entry to the Post model
-
-            # return status='success'
-            return HttpResponse()
-        else:
-            return redirect('login:login_view')
+    	if request.user.is_authenticated:
+    		user_info = models.UserInfo.objects.get(user=request.user)
+    		post = models.Post(owner=user_info, content=postContent)
+    		post.save()
+    		# TODO Objective 8: Add a new entry to the Post model
+    		# return status='success'
+    		return HttpResponse()
+    	else:
+    		return redirect('login:login_view')
 
     return HttpResponseNotFound('post_submit_view called without postContent in POST')
 
@@ -154,12 +191,13 @@ def more_post_view(request):
    	  out : (HttpResponse) - should return an empty HttpResponse after updating hte num_posts sessions variable
     '''
     if request.user.is_authenticated:
-        # update the # of posts dispalyed
-
-        # TODO Objective 9: update how many posts are displayed/returned by messages_view
-
-        # return status='success'
-        return HttpResponse()
+    	all_post=models.Post.objects.all().count()
+    	if request.session['pcount']<all_post:
+    		request.session['pcount'] += 1
+    	# update the # of posts dispalyed
+    	# TODO Objective 9: update how many posts are displayed/returned by messages_view
+    	# return status='success'
+    	return HttpResponse()
 
     return redirect('login:login_view')
 
@@ -174,12 +212,17 @@ def more_ppl_view(request):
    	  out : (HttpResponse) - should return an empty HttpResponse after updating the num ppl sessions variable
     '''
     if request.user.is_authenticated:
+    	user_info = models.UserInfo.objects.get(user=request.user)
+    	all_ppl = len([auser for auser in models.UserInfo.objects.exclude(user=user_info) if user_info not in auser.friends.all()])
+    	if request.session['count'] < all_ppl:
+    		request.session['count'] += 1
+
         # update the # of people dispalyed
 
         # TODO Objective 4: increment session variable for keeping track of num ppl displayed
 
         # return status='success'
-        return HttpResponse()
+    	return HttpResponse()
 
     return redirect('login:login_view')
 
@@ -199,15 +242,25 @@ def friend_request_view(request):
     frID = request.POST.get('frID')
     if frID is not None:
         # remove 'fr-' from frID
-        username = frID[3:]
-
-        if request.user.is_authenticated:
-            # TODO Objective 5: add new entry to FriendRequest
-
-            # return status='success'
-            return HttpResponse()
-        else:
-            return redirect('login:login_view')
+    	username = frID[3:]
+    	if request.user.is_authenticated:
+    		user_info = models.UserInfo.objects.get(user=request.user)
+    		friend_info = models.UserInfo.objects.get(user__username=username)
+    		fri_request = False
+    		for afr in models.FriendRequest.objects.all():
+    			if afr.to_user.user.username == friend_info.user.username:
+    				fri_request = True
+    				break
+    		if not fri_request:
+    			# TODO Objective 5: add new entry to FriendRequest
+    			fr = models.FriendRequest(to_user=friend_info,from_user=user_info)
+    			fr.save()
+    			data = { 'frID' : frID }
+    			# return status='success'
+    			return JsonResponse(data)
+    		return HttpResponse()
+    	else:
+    		return redirect('login:login_view')
 
     return HttpResponseNotFound('friend_request_view called without frID in POST')
 
@@ -229,14 +282,34 @@ def accept_decline_view(request):
     data = request.POST.get('decision')
     if data is not None:
         # TODO Objective 6: parse decision from data
+    	decision = data[0]
+    	fname = data[2:]
 
-        if request.user.is_authenticated:
-
-            # TODO Objective 6: delete FriendRequest entry and update friends in both Users
-
-            # return status='success'
-            return HttpResponse()
-        else:
-            return redirect('login:login_view')
+    	if request.user.is_authenticated:
+    		# TODO Objective 6: delete FriendRequest entry and update friends in both Users
+    		fr_entry = models.FriendRequest.objects.filter(from_user__user__username=fname)
+    		fr_entry.delete()
+    		if decision == 'A':
+    			user_info = models.UserInfo.objects.get(user=request.user)
+    			friend_info = models.UserInfo.objects.get(user__username=fname)
+    			user_info.friends.add(friend_info)
+    			friend_info.friends.add(user_info)
+    		# return status='success'
+    		return HttpResponse()
+    	else:
+    		return redirect('login:login_view')
 
     return HttpResponseNotFound('accept-decline-view called without decision in POST')
+
+def interest_delete_view(request):
+    interest = request.POST.get('interest')
+    if interest is not None:
+    	if request.user.is_authenticated:
+    		user_info = models.UserInfo.objects.get(user=request.user)
+    		inter_del = user_info.interests.get(label=interest[9:])
+    		inter_del.delete()
+    		return HttpResponse()
+    	else:
+    		return redirect('login:login_view')
+    return HttpResponseNotFound('interest_delete_view called without decision in POST')
+
