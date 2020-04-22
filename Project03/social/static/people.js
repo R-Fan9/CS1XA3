@@ -1,11 +1,13 @@
 /* ********************************************************************************************
    | Handle Submiting Friend Requests - called by $('.like-button').click(submitLike)
-   ********************************************************************************************
+   *******************************************************************************************
    */
 function frResponse(data,status) {
     if (status == 'success') {
+    	let frID = data.frID;
+	$('#'+frID).prop("disabled", true);
+    	location.reload();
         // reload page to update like count
-        location.reload();
     }
     else {
         alert('failed to create friend request ' + status);
@@ -56,10 +58,21 @@ function submitMorePpl(event) {
    |                           called by $('.acceptdecline-button').click(acceptDeclineRequest)
    ********************************************************************************************
    */
+function adResponse(data,status) {
+    if (status == 'success') {
+        location.reload();
+    }
+    else {
+        alert('failed to accept or decline' + status);
+    }
+}
 
 function acceptDeclineRequest(event) {
     // TODO Objective 6: perform AJAX POST to accept or decline Friend Request
-    alert('Accept/Decline Button Pressed');
+    let decision = event.target.id;
+    let json_data = { 'decision' : decision };
+    let url_path = accept_decline_url;
+    $.post(url_path, json_data, adResponse);
 }
 
 /* ********************************************************************************************

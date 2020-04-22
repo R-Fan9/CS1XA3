@@ -9,6 +9,11 @@
                 <div class="w3-container w3-padding">
                     <h6 class="w3-opacity">Change Password</h6>
                     <!--                     TODO Objective 3: Add Password Change Form -->
+		    <form method="post" id="pswdc_form" action="{% url 'social:account_view' %}">
+			{% csrf_token %}
+			{{ pswdc_form }}
+			<input type="submit" value="Change Password" />
+		    </form>
                 </div>
             </div>
         </div>
@@ -19,8 +24,39 @@
                 <div class="w3-container w3-padding">
                     <h6 class="w3-opacity">Update Info</h6>
                     <!--                     TODO Objective 3: Add User Info Update Forms -->
+		    <form method="post" id="update_form" action="{% url 'social:account_view' %}">
+			{% csrf_token %}
+			<table>
+			{{ update_form }}
+			</table>
+			<input type="submit" value="Update" />
+		    </form>
+		    <br>
+		    <b>Delete Interest:</b>
+			{% for interest in user_info.interests.all %}
+				<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom inter-tag" id="interest-{{ interest.label }}"> {{ interest.label }} </button>
+			{% endfor %}
+		    <br>
+
+		    <form method="post" id="interest_form" action="{% url 'social:account_view' %}">
+			{% csrf_token %}
+			<label for="interest"><b>Interest:</b> </label><input type="text" name="interest">
+			<button type="submit">Add Interest</button>
+		    </form>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script>
+    $.ajaxSetup({
+	headers: { "X-CSRFToken" : '{{ csrf_token }}' }
+    });
+    interest_delete_url = "{% url 'social:interest_delete_view' %}";  
+    </script>
+    <script src="{% static 'account.js' %}"></script>
+</script>
 {% endblock %}
