@@ -76,6 +76,7 @@
 	  to the 'login' page
 	- changes and saves the user's new profile from the POST request sent 
 	  by the UserInfoForm - a custom form created in 'soical/models.py'
+	- note 'Birthday' should be entered in the format of mm/dd/yyyy or yyyy-mm-dd
 	- adds a new interest to the user's interests list from the POST 
 	  request sent by the form  
 	- deletes an interest from the user's interests list. This process starts
