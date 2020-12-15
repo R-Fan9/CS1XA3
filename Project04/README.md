@@ -1,4 +1,4 @@
-# CS 1XA3 Project01 - fanh11
+# CS 1XA3 Project04 - fanh11
 
 ## Usage
 Execute this script from project root with:
